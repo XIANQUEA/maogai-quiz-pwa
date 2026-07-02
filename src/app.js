@@ -6,7 +6,7 @@ import { gradeQuestion } from "./domain/questions.js";
 import { createSession } from "./domain/session.js";
 import { applyAttempt, buildStats } from "./domain/progress.js";
 import * as view from "./ui/screens.js";
-import { selected } from "./ui/controller.js";
+import { selected, shouldSubmitOnSelection } from "./ui/controller.js";
 
 const root=document.querySelector("#app");
 const state={questions:[],records:[],store:null,persistent:true,session:[],mode:"",index:0,locked:false,lastCorrect:false,results:[]};
@@ -30,7 +30,11 @@ root.addEventListener("click",async event=>{const action=event.target.closest("[
   if(action==="export")download();
   if(action==="clear"&&confirm("确定清空全部学习记录吗？")){await state.store.clear();state.records=[];renderHome();}
 });
-root.addEventListener("change",async event=>{if(event.target.id!=="import")return;try{const backup=parseBackup(await event.target.files[0].text(),BANK_VERSION);await state.store.replaceAll(backup.records);state.records=backup.records;alert("学习记录已恢复");renderHome();}catch(error){alert(error.message);}});
+root.addEventListener("change",async event=>{
+  if(event.target.name==="answer"&&!state.locked&&shouldSubmitOnSelection(state.session[state.index]?.type)){await submit();return;}
+  if(event.target.id!=="import")return;
+  try{const backup=parseBackup(await event.target.files[0].text(),BANK_VERSION);await state.store.replaceAll(backup.records);state.records=backup.records;alert("学习记录已恢复");renderHome();}catch(error){alert(error.message);}
+});
 
 try{state.questions=await loadQuestionBank(BANK_URL,BANK_VERSION);try{state.store=await openProgressStore();state.records=await state.store.all();}catch{state.persistent=false;state.store=createMemoryStore();}renderHome();}catch(error){root.innerHTML=`<main class="screen"><h1>无法启动</h1><p>${error.message}</p></main>`;}
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"));
