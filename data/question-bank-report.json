@@ -1,0 +1,11 @@
+{
+  "bankVersion": 1,
+  "sections": 10,
+  "questions": 476,
+  "byType": {
+    "judgment": 118,
+    "single": 194,
+    "multiple": 164
+  },
+  "errors": []
+}
