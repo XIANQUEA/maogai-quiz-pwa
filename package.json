@@ -1,0 +1,11 @@
+{
+  "name": "maogai-quiz-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "test": "node --test test/*.test.mjs",
+    "bank:build": "node tools/build-question-bank.mjs source/question-bank.txt data/questions.v1.json data/question-bank-report.json"
+  }
+}
