@@ -17,3 +17,7 @@ npm test
 ```
 
 学习记录保存在浏览器 IndexedDB 中，请定期在设置页导出备份。
+
+## 在线访问
+
+GitHub Pages：<https://xianquea.github.io/maogai-quiz-pwa/>
